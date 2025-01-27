@@ -10,6 +10,12 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/entities/category.entity';
+import { TaskCategoryModule } from './task_category/task_category.module';
+import { TaskCategory } from './task_category/entities/task_category.entity';
+import { NotificationModule } from './notification/notification.module';
+import { Notification } from './notification/entities/notification.entity';
+import { PointsModule } from './points/points.module';
+import { Points } from './points/entities/points.entity';
 
 @Module({
   imports: [
@@ -20,14 +26,17 @@ import { Category } from './categories/entities/category.entity';
       username: 'root',
       password: 'root',
       database: 'ToDoList',
-      entities: [User, Task, Category],
+      entities: [User, Task, Category, TaskCategory, Notification, Points],
       synchronize: true,
     }),
     ConfigModule.forRoot(),
     UserModule,
     TaskModule,
     AuthModule,
-    CategoriesModule],
+    CategoriesModule,
+    TaskCategoryModule,
+    NotificationModule,
+    PointsModule],
   controllers: [AppController,],
   providers: [AppService],
 })

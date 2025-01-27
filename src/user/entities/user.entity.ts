@@ -1,6 +1,7 @@
 import { Category } from "src/categories/entities/category.entity";
+import { Points } from "src/points/entities/points.entity";
 import { Task } from "src/task/entities/task.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -21,4 +22,7 @@ export class User {
 
     @OneToMany(() => Category, category => category.user, {cascade : true})
     categories : Category[]
+
+    @OneToOne(() => Points, points => points.user)
+    points : Points[]
 }
