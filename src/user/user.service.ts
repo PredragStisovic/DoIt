@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Task } from 'src/task/entities/task.entity';
+import { PointsService } from 'src/points/points.service';
 const bcrypt = require('bcrypt');
 
 @Injectable()
@@ -13,11 +14,14 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository : Repository<User>,
+    private readonly pointsService : PointsService,
     private readonly dataSource : DataSource
   ){}
 
   async create(user: CreateUserDto) {
-    return this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    const points = this.pointsService.create(savedUser);
+    return savedUser;
   }
 
   async findAll() {

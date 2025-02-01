@@ -18,4 +18,25 @@ export class PointsService {
         points.user = user;
         return this.pointsRepository.save(points);
     }
+    findUsersPoints(req_user : User){
+        return this.pointsRepository.findOneBy({user : req_user})
+    }
+    async addPoints(points : number, req_user : User){
+        const usersPoints = await this.findUsersPoints(req_user);
+        usersPoints.total_points += points;
+        usersPoints.earned_points += points;
+        await this.pointsRepository.save(usersPoints);
+    }
+    async spendPoints(points : number, req_user : User){
+        const usersPoints = await this.findUsersPoints(req_user);
+        if(points <= usersPoints.total_points){
+            usersPoints.total_points -= points;
+            usersPoints.spent_points += points;
+            await this.pointsRepository.save(usersPoints);
+        }else{
+            throw Error("Not enough points");
+        }
+        return usersPoints;
+    }
+
 }

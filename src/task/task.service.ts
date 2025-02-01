@@ -5,12 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { DataSource, Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { PointsService } from 'src/points/points.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository : Repository<Task>,
+    private readonly pointsService : PointsService,
     private readonly dataSource : DataSource
   ){}
   create(createTaskDto: CreateTaskDto, user : User) {
@@ -50,13 +52,21 @@ export class TaskService {
     if(updateTaskDto.title != null){
       task.title = updateTaskDto.title
     }
-    if(updateTaskDto.completed != null){
-      task.completed = updateTaskDto.completed
-    }
     if(updateTaskDto.points != null){
       task.points = updateTaskDto.points
     }
     return this.taskRepository.save(task)
+  }
+
+  async completeTask(id : number, user : User){
+    const task = await this.taskRepository.findOneBy({taskId : id});
+    if(task.completed == true){
+      return "Task already completed";
+    }
+    task.completed = true;
+    await this.pointsService.addPoints(task.points, user);
+    await this.taskRepository.save(task);
+    return await this.pointsService.findUsersPoints(user);
   }
 
   remove(id: number) {

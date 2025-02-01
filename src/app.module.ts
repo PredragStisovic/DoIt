@@ -16,6 +16,10 @@ import { NotificationModule } from './notification/notification.module';
 import { Notification } from './notification/entities/notification.entity';
 import { PointsModule } from './points/points.module';
 import { Points } from './points/entities/points.entity';
+import { RewardsModule } from './rewards/rewards.module';
+import { Reward } from './rewards/entities/reward.entity';
+import { TransactionsModule } from './transactions/transactions.module';
+import { RewardTransaction } from './transactions/entities/transaction.entity';
 
 @Module({
   imports: [
@@ -26,7 +30,7 @@ import { Points } from './points/entities/points.entity';
       username: 'root',
       password: 'root',
       database: 'ToDoList',
-      entities: [User, Task, Category, TaskCategory, Notification, Points],
+      entities: [User, Task, Category, TaskCategory, Notification, Points, Reward, RewardTransaction],
       synchronize: true,
     }),
     ConfigModule.forRoot(),
@@ -36,7 +40,9 @@ import { Points } from './points/entities/points.entity';
     CategoriesModule,
     TaskCategoryModule,
     NotificationModule,
-    PointsModule],
+    PointsModule,
+    RewardsModule,
+    TransactionsModule],
   controllers: [AppController,],
   providers: [AppService],
 })
